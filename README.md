@@ -1,5 +1,5 @@
 # fileLock
-Multiprocess and thread safe File lock class.
+Multiprocess and thread safe file lock class.
 
 ## Compability
 `fileLock` is compatible with all OS what contains `#include <sys/file.h>` and `#include <unistd.h>`
@@ -33,17 +33,20 @@ void testThread() {
     std::string    mode     = "a";
     annm::fileLock file     = annm::fileLock(filename, mode);
     
-    file.lock();
-    fprintf(file.pointer(), "Hello file!\n");
-    // sleep(1); /* It's possible to slow down this critical section. */
-    file.unlock();
+    if(file.lock()) {
+        for(int i = 0; i < 10; i++) {
+            fprintf(file.pointer(), "Hello file!\n");
+        }
+        // sleep(1); /* It's possible to slow down this critical section. */
+        file.unlock();
+    }
 
 }
 
 
 int main(void) {
 
-    int n = 100;
+    int n = 10;
     std::vector<std::thread> threads(n);
 
     for(int i = 0; i < n; i++) {
