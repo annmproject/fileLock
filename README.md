@@ -16,6 +16,49 @@ fprintf(file.pointer(), "Hello file!");
 file.unlock();
 ```
 
+## Tests
+It's possible to create simple test.
+
+```
+#include <iostream>
+#include <string>
+#include <vector>
+#include <thread>
+#include <unistd.h>
+#include <fileLock/fileLock.hpp>
+
+void testThread() {
+
+    std::string    filename = "test.txt";
+    std::string    mode     = "a";
+    annm::fileLock file     = annm::fileLock(filename, mode);
+    
+    file.lock();
+    fprintf(file.pointer(), "Hello file!\n");
+    // sleep(1); /* It's possible to slow down this critical section. */
+    file.unlock();
+
+}
+
+
+int main(void) {
+
+    int n = 100;
+    std::vector<std::thread> threads(n);
+
+    for(int i = 0; i < n; i++) {
+        threads[i] = std::thread(testThread);
+    }
+
+    for(int i = 0; i < n; i++) {
+        threads[i].join();
+    }
+
+    return 0;
+
+}
+```
+
 ## License
 
 You can find it in LICENSE file.
