@@ -12,7 +12,6 @@ std::string    mode = "a";
 annm::fileLock file = annm::fileLock(filename, mode);
 
 file.lock();
-fwrite(str, 5, 1, file.pointer());
 fprintf(file.pointer(), "Hello file!");
 file.unlock();
 ```
